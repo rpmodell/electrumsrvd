@@ -137,6 +137,7 @@ int curl_core_rpc_req(BitcoinRpcCtx *ctx, const char *method, jsonobj *args, jso
 
 	obj = jsonobj_lookup(resp, "error");
 	if (obj && obj->type != JSON_NULL) {
+        ret = JSONRPC_INTERNAL_ERROR;
 		jsonobj *e = jsonobj_lookup(obj, "code");
 		if (e)
             ret = e->e.int_value;
