@@ -1088,7 +1088,7 @@ static int handle_request(struct client *client, MempoolCache *mcp, BitcoinRpcCt
 {
     int nread = 0;
 
-    size_t capacity = 4096;
+    size_t capacity = 4096 + 1;
     size_t req_str_sz = 0, resp_str_sz = 0;
     char *req_buf = (char*) malloc(capacity * sizeof(char));
     char *req_str = NULL;
@@ -1099,8 +1099,8 @@ static int handle_request(struct client *client, MempoolCache *mcp, BitcoinRpcCt
     jsonobj *response = NULL;
     jsonobj *result = NULL;
     jsonobj *e = NULL;
-    int rpc_errno = 0;
     jsonobj *id = NULL;
+    int rpc_errno = 0;
     char *method = NULL;
     int i;
 
@@ -1122,8 +1122,8 @@ static int handle_request(struct client *client, MempoolCache *mcp, BitcoinRpcCt
     req_savep = req_buf;
 
     /*
-        Sometimes electrum sends its requests in batch '\n' separated
-        so we need to cycle through requests using strtok_r
+     * Sometimes electrum sends its requests in batch '\n' separated
+     * so we need to cycle through requests using strtok_r
     */
     while ((req_str = strtok_r(req_savep, "\n", &req_savep))) {
         logdebugf("electrum rpc server: request %s", req_str);
@@ -1131,6 +1131,7 @@ static int handle_request(struct client *client, MempoolCache *mcp, BitcoinRpcCt
         request = jsonobj_new();
         response = jsonobj_put_jsonobj(NULL, "", NULL);
         result = jsonobj_new();
+        id = NULL;
 
         if (jsonobj_parse_str(request, req_str)) {
             rpc_errno = JSONRPC_PARSE_ERROR;
@@ -1162,7 +1163,7 @@ static int handle_request(struct client *client, MempoolCache *mcp, BitcoinRpcCt
                 if (rpc_errno)
                     goto send_error;
 
-                jsonobj_put(response, "result", result); //error not handled
+                jsonobj_put(response, "result", result);
                 goto send_response;
             }
         }
