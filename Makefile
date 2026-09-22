@@ -63,5 +63,7 @@ clean:
 install:
 	install -m 0755 ./$(TARGET) /usr/local/bin/ 
 	install -m 0664 -b ./etc/$(TARGET).conf /usr/local/etc/
-	install -m 0664 ./$(TARGET).1 /usr/local/share/man/man1/
-	install -m 0664 ./$(TARGET).conf.1 /usr/local/share/man/man1/
+	-install -m 0664 ./$(TARGET).1 /usr/local/share/man/man1/
+	-install -m 0664 ./$(TARGET).1 /usr/local/man/man1/
+	-install -m 0664 ./$(TARGET).conf.1 /usr/local/share/man/man1/
+	-install -m 0664 ./$(TARGET).conf.1 /usr/local/man/man1/
